@@ -4,17 +4,18 @@ import { FaPhone } from 'react-icons/fa6';
 //? CSS
 import s from './Contact.module.css';
 
-const Contact = () => {
+const Contact = ({ contact }) => {
+  const { name, number } = contact;
   return (
     <li className={s.list_el}>
       <div className={s.user_info_wrapper}>
         <span className={s.user_info}>
           <FaUser />
-          Rosie Simpson
+          {name}
         </span>
         <span className={s.user_info}>
           <FaPhone />
-          5-555-055
+          {number}
         </span>
       </div>
       <button className={s.btn}>Delete</button>
