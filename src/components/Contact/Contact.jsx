@@ -4,8 +4,8 @@ import { FaPhone } from 'react-icons/fa6';
 //? CSS
 import s from './Contact.module.css';
 
-const Contact = ({ contact }) => {
-  const { name, number } = contact;
+const Contact = ({ contact, handleDeleteContact }) => {
+  const { name, number, id } = contact;
   return (
     <li className={s.list_el}>
       <div className={s.user_info_wrapper}>
@@ -18,7 +18,9 @@ const Contact = ({ contact }) => {
           {number}
         </span>
       </div>
-      <button className={s.btn}>Delete</button>
+      <button className={s.btn} onClick={() => handleDeleteContact(id)}>
+        Delete
+      </button>
     </li>
   );
 };

@@ -3,42 +3,54 @@ import ContactForm from './ContactForm/ContactForm';
 import SearchBox from './SearchBox/SearchBox';
 import ContactList from './ContactList/ContactList';
 //? Libraries
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 //? CSS
 import '../index.css';
 import 'modern-normalize';
+
 function App() {
-  const [contacts, setContacts] = useState([]);
+  //* Save to localStorage
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = localStorage.getItem('Contacts');
+    return savedContacts ? JSON.parse(savedContacts) : [];
+  });
 
-  //!!! Search contact
-  // const [searchTerm, setSearchTerm] = useState('');
-  // const [searchResults, setSearchResults] = useState([]);
-  // const handleSearchChange = (e) => {
-  //   setSearchTerm(e.target.value);
-  // };
-  // useEffect(() => {
-  //   const results = contacts.filter((contact) =>
-  //     contact.name.toLowerCase().includes(searchTerm)
-  //   );
-  //   setSearchResults(results);
-  // }, [searchTerm, contacts]);
+  useEffect(() => {
+    localStorage.setItem('Contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  //Add contact
+  //* Filter contacts
+  const [filteredContacts, setFilteredContacts] = useState([]);
+
+  useEffect(() => {
+    setFilteredContacts(contacts);
+  }, [contacts]);
+
+  const handleFilter = (e) => {
+    const value = e.target.value.toLowerCase();
+    const filtered = contacts.filter((contact) => contact.name.includes(value));
+    setFilteredContacts(filtered);
+  };
+
+  //* Add contact
   const handleAddContact = (contact) => {
     setContacts((prev) => [...prev, { ...contact, id: nanoid() }]);
+  };
+
+  //* Delete contact
+  const handleDeleteContact = (id) => {
+    setContacts((prev) => prev.filter((contact) => contact.id !== id));
   };
 
   return (
     <div>
       <h1>Phonebook</h1>
       <ContactForm handleAddContact={handleAddContact} />
-      <SearchBox
-      // handleSearchChange={handleSearchChange}
-      />
+      <SearchBox handleFilter={handleFilter} />
       <ContactList
-        contacts={contacts}
-        // searchResults={searchResults}
+        contacts={filteredContacts}
+        handleDeleteContact={handleDeleteContact}
       />
     </div>
   );
