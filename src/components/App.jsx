@@ -10,7 +10,6 @@ import '../index.css';
 import 'modern-normalize';
 
 function App() {
-  //* Save to localStorage
   const [contacts, setContacts] = useState(() => {
     const savedContacts = localStorage.getItem('Contacts');
     return savedContacts ? JSON.parse(savedContacts) : [];
@@ -18,27 +17,23 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('Contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  //* Filter contacts
-  const [filteredContacts, setFilteredContacts] = useState([]);
-
-  useEffect(() => {
     setFilteredContacts(contacts);
   }, [contacts]);
 
+  const [filteredContacts, setFilteredContacts] = useState([]);
+
   const handleFilter = (e) => {
     const value = e.target.value.toLowerCase();
-    const filtered = contacts.filter((contact) => contact.name.includes(value));
+    const filtered = contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(value)
+    );
     setFilteredContacts(filtered);
   };
 
-  //* Add contact
   const handleAddContact = (contact) => {
     setContacts((prev) => [...prev, { ...contact, id: nanoid() }]);
   };
 
-  //* Delete contact
   const handleDeleteContact = (id) => {
     setContacts((prev) => prev.filter((contact) => contact.id !== id));
   };
